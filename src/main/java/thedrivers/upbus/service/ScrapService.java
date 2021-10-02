@@ -31,7 +31,7 @@ public class ScrapService {
 		log.info("업사이클링 재료신청서 리스트: {}", scrapSaleRequestList);
 		return	scrapSaleRequestList;
 	}
-	// 업사이클링 재료 판매 신청서 상세페이지 이동시 scrapSaleRequestCode로 값 받아오긴
+	// 업사이클링 재료 판매 신청서 상세페이지 이동시 scrapSaleRequestCode로 값 받아오기
 	public ScrapSaleRequest getScrapSaleDetail(String scrapSaleRequestCode){
 		ScrapSaleRequest scrapSaleRequestDetailList = scrapMapper.getScrapSaleDetail(scrapSaleRequestCode);
 		return scrapSaleRequestDetailList;
