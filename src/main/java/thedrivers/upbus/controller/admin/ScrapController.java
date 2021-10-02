@@ -42,7 +42,7 @@ public class ScrapController {
 		List<ScrapSaleRequest> scrapSaleRequestList = scrapService.getScrapSale();		
 		model.addAttribute("title", "UPBUS");
 		model.addAttribute("h1text", "업사이클링 재료 판매 신청서 관리");
-		model.addAttribute("scrapRequestList", scrapSaleRequestList);
+		model.addAttribute("scrapSaleRequestList", scrapSaleRequestList);
 		return pageType+"/SaleListManage";
 	}
 	
