@@ -39,8 +39,8 @@
 						<tbody>
 							<tr th:each="goodsInventoryList : ${goodsInventoryList}">
 								<td th:text="${goodsInventoryList.goodsInventoryCode}"></td>
- 								<td>개인위탁판매신청코드</td>
-								<td>상품소분류코드</td>
+ 								<td th:text="${goodsInventoryList.goodsRequestCode}">개인위탁판매신청코드</td>
+								<td th:text="${goodsInventoryList.goodsCategoryCode}">상품소분류코드</td>
 								<td th:text="${goodsInventoryList.goodsName}"></td>
 								<td th:text="${goodsInventoryList.goodsInventoryStatus}"></td>
 								<td th:text="${goodsInventoryList.goodsInventoryStatusCheck}"></td>
