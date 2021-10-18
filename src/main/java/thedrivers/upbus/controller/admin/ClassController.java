@@ -105,6 +105,14 @@ public class ClassController {
 		return "redirect:admin/class/EnrollmentManage";
 	}
 	
+	// (4) 클래스 일정 관리 시스템
+	@GetMapping("ClassScheduleManagement")
+	public String classScheduleManagement(Model model) {
+		model.addAttribute("schedule", "calender");
+		
+		return pageType + "/ClassScheduleManagement";
+	}
+	
 	
 	@GetMapping("/StatusManage")
 	public String statusManage(Model model) {
