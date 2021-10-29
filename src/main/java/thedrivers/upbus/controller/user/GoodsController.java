@@ -138,6 +138,12 @@ public class GoodsController {
 		return pageType+"/Order";
 	}
 	
+	@PostMapping("/Order")
+	public String Order() {
+		
+		return pageType+"/Order";
+	}
+	
 	
 	@GetMapping("/OrderList")
 	public String orderList(Model model) {

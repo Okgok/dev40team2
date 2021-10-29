@@ -210,6 +210,15 @@ private final MemberService memberService;
 		
 				return pageType + "/MemberDelete";
 	}
+
+	/***************** [ 장바구니 이동] **********************/
+	@GetMapping("/ShoppingBasket")	
+	public String ShoppingBasket(Model model){
+				model.addAttribute("title", "장바구니");
+		
+				return pageType + "/ShoppingBasket";
+	}
+	
 	@GetMapping("/Cart")
 	public String cart(Model model) {		
 		model.addAttribute("title", "UPBUS");

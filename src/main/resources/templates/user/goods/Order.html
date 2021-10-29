@@ -192,6 +192,7 @@
   		</div>
 	</div> -->
 	
+	<form th:action="@{/user/goods/Order}" method="post">
 	
 	<div class="panel panel-default">
   		<div class="panel-body">
@@ -199,16 +200,16 @@
   		</div>
   		<div class="panel-footer" id="oreder-info-panel-footer">
 			<div class=container-fluid>
-				<form class="form-horizontal">
+				<div class="form-horizontal">
 					<div class="col-lg-12 col-sm-12 col-xs-12">
 						<div class="form-group">
 							<label class="label-control col-lg-2 col-sm-2 col-xs-2" for="user-id">아이디</label>
 							<div class="col-lg-4 col-sm-4 col-xs-4">
-								<input type="text" class="form-control" name="user-id">
+								<input type="text" class="form-control" name="orederUserId">
 							</div>
 							<label class="label-control col-lg-2 col-sm-2 col-xs-2" for="user-Name">성명</label>
 							<div class="col-lg-4 col-sm-4 col-xs-4">
-								<input type="text" class="form-control" name="user-Name">
+								<input type="text" class="form-control" name="orderUserName">
 							</div>
 						</div>
 	 				</div>
@@ -216,12 +217,13 @@
 	 				<div class="form-group">
 					 	<div class="col-lg-12 col-sm-12 col-xs-12" >
 					 		<label class="label-control col-lg-2 col-sm-2 col-xs-2" for="phone-nubmer1">휴대폰 번호</label>
-							<div class="col-lg-10 col-sm-10 col-xs-10" id="phonenumber-group" >
-								<input type="text" class="form-control phone-number-style" name="phone-number1">  
+							<div class="col-lg-10 col-sm-10 col-xs-10" id="phonenumber-group" >	
+								<input type="text" class="orderPhoneNumber form-control phone-number-style" >  
 							 	<label class="pnl-style"> - </label>
-							 	<input type="text" class="form-control phone-number-style" name="phone-number2">
+							 	<input type="text" class="orderPhoneNumber form-control phone-number-style" >
 							 	<label class="pnl-style"> - </label>
-							 	<input type="text" class="form-control phone-number-style" name="phone-number3">
+							 	<input type="text" class="orderPhoneNumber form-control phone-number-style" >
+							 	<input type="hidden" name="orderPhoneNumberVal">
 							</div>
 					 	</div>
 				 	</div>
@@ -234,7 +236,7 @@
 							</div>
 		 				</div>
 	 				</div>
- 				</form>
+ 				</div>
  			</div>	
 		</div>
 	</div>
@@ -246,7 +248,7 @@
   		<div class="panel-footer">
 			<div class=container-fluid>
 				<div class="col-lg-9 col-sm-9 col-xs-9">
-					<form class="form-horizontal">
+					<div class="form-horizontal">
 						<div class="form-group category-style" id="formgroup-flex">
 							<div class="col-lg-2 col-sm-2 col-md-2 col-xs-2 ">
 								<label class="label-control" > (대분류) </label>
@@ -289,7 +291,7 @@
 					  			<span class="input-group-addon">개</span>
 					 		</div>
 					 	</div>
-					</form>
+					</div>
 				</div>
 				
 			 	<div class="col-lg-3 col-sm-3 col-xs-3" id="imgSetting">
@@ -308,7 +310,7 @@
   		<div class="panel-footer">
 			<div class=container-fluid>
 				<div class="col-lg-9 col-sm-9 col-xs-9">
-					<form class="form-horizontal">
+					<div class="form-horizontal">
 						<div class="form-group category-style" id="formgroup-flex">
 							<div class="col-lg-2 col-sm-2 col-md-2 col-xs-2 ">
 								<label class="label-control" > (대분류) </label>
@@ -351,7 +353,7 @@
 					  			<span class="input-group-addon">개</span>
 					 		</div>
 					 	</div>
-					</form>
+					 </div>
 				</div>
 				
 			 	<div class="col-lg-3 col-sm-3 col-xs-3" id="imgSetting">
@@ -439,11 +441,11 @@
 					 	<div class="col-lg-12 col-sm-12 col-xs-12" >
 					 		<label class="label-control col-lg-2 col-sm-2 col-xs-2" for="shipper-phone-nubmer1">휴대폰 번호</label>
 							<div class="col-lg-10 col-sm-10 col-xs-10" id="phonenumber-group" >
-								<input type="text" class="form-control phone-number-style" name="shipper-phone-number1">  
+								<input type="text" class="shipperPhoneNumber form-control phone-number-style">  
 							 	<label class="pnl-style"> - </label>
-							 	<input type="text" class="form-control phone-number-style" name="shipper-phone-number2">
+							 	<input type="text" class="shipperPhoneNumber form-control phone-number-style">
 							 	<label class="pnl-style"> - </label>
-							 	<input type="text" class="form-control phone-number-style" name="shipper-phone-number3">
+							 	<input type="text" class="shipperPhoneNumber form-control phone-number-style">
 							</div>
 					 	</div>
 				 	</div>
@@ -545,32 +547,31 @@
 	</div>
 	
 	<div style="text-align: right">
-		<button type="button" class="btn btn-primary">주문하기</button>
-		<button type="button" class="btn btn-danger">주문취소</button>
+		<button type="button" class="btn btn-primary" id="orderOkBtn">주문하기</button>
+		<button type="button" class="btn btn-danger" id="orderNoBtn">주문취소</button>
 	</div>
 	
-	
+	</form>
 	
 	<!--autoload=false 파라미터를 이용하여 자동으로 로딩되는 것을 막습니다.-->
 	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js?autoload=false"></script>
 	
 	<script>
-	/** 우편번호 찾기 */
-	function execDaumPostcode() {
-	    daum.postcode.load(function(){
-	        new daum.Postcode({
-	            oncomplete: function(data) {
-	              // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
-	              $("#postcode").val(data.zonecode);
-	              $("#address").val(data.roadAddress);
-	            }
-	        }).open();
-	    });
-	}
-	</script>
-	
+
+		/** 우편번호 찾기 */
+		function execDaumPostcode() {
+		    daum.postcode.load(function(){
+		        new daum.Postcode({
+		            oncomplete: function(data) {
+		              // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+		              $("#postcode").val(data.zonecode);
+		              $("#address").val(data.roadAddress);
+		            }
+		        }).open();
+		    });
+		}
 		
-	<script>
+		/** 대분류, 소분류 카테고리 클릭 */
 		var goodsSubCategory = $('#goodsSubCategory');
 		var goodsMainCategory = $('#goodsMainCategory');
 		goodsSubCategory.click(function () {
@@ -580,6 +581,7 @@
 				return;
 			}
 		});
+		
 		function chainedSub(main) {
 			if(main == ''){
 				goodsSubCategory.append('<option value="">작은 분류</option>');
@@ -605,6 +607,41 @@
 				}
 			});
 		}
+	
+		$(function(){
+			$('#orderOkBtn').click( function(){
+				
+				var orderPhoneNumber = $('.orderPhoneNumber');			// 주문하는 사람 전화번호 xxx - xxxx - xxxx
+				var shipperPhoneNumber = $('.shipperPhoneNumber');		// 배송받을 사람 전화번호 xxx - xxxx - xxxx
+				var orderPhoneNumberVal = '';
+				var shipperPhoneNumberVal = '';
+				
+				for(var i=0; i < orderPhoneNumber.size(); i++ ){
+					var orderPhoneNumberVal = orderPhoneNumberVal + orderPhoneNumber[i].value;
+				}
+				
+				for(var j=0; j < shipperPhoneNumber.size(); j++){
+					var shipperPhoneNumberVal = shipperPhoneNumberVal + shipperPhoneNumber[j].value;
+				}
+				
+				
+				for(var i=0; i < array.size(); i++){
+					
+					(function(index){
+						
+					})(i);
+					
+				}
+				
+				
+				console.log(orderPhoneNumberVal);
+				console.log(shipperPhoneNumberVal);
+								
+				
+			});	
+		});
+	
+		
 	</script>
 
 
