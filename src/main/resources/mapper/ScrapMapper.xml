@@ -11,11 +11,20 @@
 		<result property="scrapInventoryStatusCheck" 		column="scrap_inventory_status_check"/>
 		<result property="scrapInventoryPrimaryDate" 		column="scrap_inventory_primary_date"/>
 		<result property="scrapInventoryPrimaryIncharge" 	column="scrap_inventory_primary_incharge"/>
-		<result property="scrapStatus" 						column="scrapt_status"/>
+		<result property="scrapStatus" 						column="scrap_status"/>
 		<result property="scrapInventoryLastDate" 			column="scrap_inventory_last_date"/>
 		<result property="scrapInventoryLastIncharge" 		column="scrap_inventory_last_incharge"/>
 		<result property="scrapImage" 						column="scrap_image"/>
-		<result property="scrapPrice" 						column="scrap_price"/>
+		<association property="scrapSale" javaType="ScrapSale">
+        	<id 	property="scrapSaleCode" 			column="scrap_sale_code"/>
+        	<result property="scrapRequestCode" 		column="scrap_request_code" />
+        	<result property="scrapMileageUserListCode" column="scrap_mileage_user_list_code" />
+        	<result property="scrapReceivingDate" 		column="scrap_receiving_date" />
+       		<result property="scrapInspectionDate" 		column="scrap_inspection_date" />
+       		<result property="scrapStatusAmount" 		column="scrap_status_amount" />
+        	<result property="scrapWeight" 				column="scrap_weight" />
+        	<result property="scrapPrice"				column="scrap_price" />
+        </association>
 	</resultMap>
 	<!-- 업사이클링 재료 판매 신청서 리절트 맵  -->
 	<resultMap type="ScrapSaleRequest" id="scrapSaleRequestList">
@@ -43,6 +52,22 @@
 		<result property="scrapInspectionDate" 			column="scrap_inspection_date"/>
 		<result property="scrapStatusAmount" 			column="scrap_status_amount"/>
 		<result property="scrapWeight" 					column="scrap_weight"/>
+	
+	</resultMap>
+	<resultMap type="ScrapCategory" id="scrapCategory">
+	<result property="scrapCategoryNumber" 				column="scrap_category_number"/>
+	<result property="scrapCategoryName" 				column="scrap_category_name"/>
+	
+	</resultMap>
+	<resultMap type="ScrapUpcylingList" id="scrapUpcylingList">
+		<result property="scrapMaterialListCode" 			column="scrap_material_list_code"/>
+		<result property="scrapCategoryNumber" 				column="scrap_category_number"/>
+		<result property="scrapName" 						column="scrap_name"/>
+		<result property="scrapPriceUnit" 					column="scrap_price_unit"/>
+		<result property="scrapMaterialPriceWon" 			column="scrap_material_price_won"/>
+		<result property="scrapWeightPerPiece" 				column="scrap_weight_per_piece"/>
+		<result property="scrapUpcylingImage"				column="scrap_upcyling_image"/>
+		<result property="mileageAccumulateStandardCode" 	column="scrap_category_name"/>
 	
 	</resultMap>
 	
@@ -78,8 +103,7 @@
 			,scrap_request_image
 			,scrap_request_date			
 			,scrap_shipping_out_addr					
-			,scrap_shipping_in_addr					
-			
+			,scrap_shipping_in_addr
 			,scrap_name				
 		FROM
 			scrap_sale_request AS s
@@ -110,19 +134,24 @@
 	<select id="getScrapList" resultMap="scrapList">
 		SELECT 
 			scrap_inventory_code
-			,scrap_sale_code
+			,s.scrap_sale_code
 			,scrap_inventory_status
 			,scrap_inventory_status_check
 			,scrap_inventory_primary_date
 			,scrap_inventory_primary_incharge
-			,scrapt_status
+			,scrap_status
 			,scrap_inventory_last_date
 			,scrap_inventory_last_incharge
 			,scrap_image
 			,scrap_price
 		from
-			scrap_list_inventory
-		ORDER BY scrap_inventory_code DESC; 
+			scrap_list_inventory AS i
+			INNER JOIN
+			scrap_sale	AS s
+			ON 
+			i.scrap_sale_code = s.scrap_sale_code
+		ORDER BY scrap_inventory_code DESC;
+		
 	</select>
 	<!-- 업사이클링 매입 리스트 -->
 	<select id="getSaleList" resultMap="saleList">
@@ -142,8 +171,33 @@
 	<update id="scrapWeightApprovalInsert" parameterType="ScrapSale">
 		UPDATE scrap_sale
 		SET scrap_weight = #{scrapWeight}
-		WHERE scrap_sale_code = #{scrapSaleCode};
+		WHERE scrap_sale_code = #{scrapSaleCode}
 	</update>
+	<update id="scrapPriceUpdate" parameterType="ScrapSale" >
+		UPDATE scrap_sale
+		SET scrap_Price = #{scrapPrice}
+		WHERE scrap_sale_code = #{scrapSaleCode}
+	</update>
+	<update id="scrapInspectiondateUpdate" parameterType="ScrapSale" >
+		UPDATE scrap_sale
+		SET scrap_inspection_date = CURDATE()
+		WHERE scrap_sale_code =  #{scrapSaleCode}
+	</update>
+	
+	<select id="getScrapPrice" parameterType="String" resultMap="scrapUpcylingList">
+	SELECT
+		scrap_price_unit,
+		scrap_material_price_won
+	FROM
+		scrap_sale_request AS request
+		INNER join
+		scrap_upcyling_list AS upcyling
+		ON
+		upcyling.scrap_material_list_code = request.scrap_material_list_code
+	WHERE 
+		request.scrap_request_code = #{scrapRequestCode};
+	
+	</select>
 	<!-- 업사이클링 매입 관리 자동증가 쿼리 -->
 	<insert id="scrapSaleInsert" parameterType="ScrapSale">
     	<selectKey resultType="String" keyProperty="scrapSaleCode" order="BEFORE">
@@ -189,7 +243,7 @@
     	  ,scrap_inventory_status
     	  ,scrap_inventory_status_check
     	  ,scrap_inventory_primary_date
-    	  ,scrapt_status
+    	  ,scrap_status
     	)VALUES(
     	   #{scrapInventoryCode}
     	  ,#{scrapSaleCode}
@@ -197,27 +251,13 @@
     	  ,#{scrapInventoryStatusCheck}
     	  ,CURDATE()
     	  ,#{scrapStatus});
+    	  
 	</insert>
 	<delete id="scrapInventoryDelete" parameterType="String">
 		DELETE FROM scrap_list_inventory
 		WHERE scrap_sale_code = #{scrapSaleCode};
 	</delete>
-		<resultMap type="ScrapCategory" id="scrapCategory">
-		<result property="scrapCategoryNumber" 				column="scrap_category_number"/>
-		<result property="scrapCategoryName" 				column="scrap_category_name"/>
 	
-	</resultMap>
-	<resultMap type="ScrapUpcylingList" id="scrapUpcylingList">
-		<result property="scrapMaterialListCode" 			column="scrap_material_list_code"/>
-		<result property="scrapCategoryNumber" 				column="scrap_category_number"/>
-		<result property="scrapName" 						column="scrap_name"/>
-		<result property="scrapPriceUnit" 					column="scrap_price_unit"/>
-		<result property="scrapMaterialPriceWon" 			column="scrap_material_price_won"/>
-		<result property="scrapWeightPerPiece" 				column="scrap_weight_per_piece"/>
-		<result property="scrapUpcylingImage"				column="scrap_upcyling_image"/>
-		<result property="mileageAccumulateStandardCode" 	column="scrap_category_name"/>
-	
-	</resultMap>
 	
 	  <select id="getscrapRequestCode" resultType="String">
         SELECT
@@ -282,6 +322,7 @@
 			m.scrap_category_name = #{scrapCategory};
 		
 	</select>
+	<!-- 재료 이름으로 서브카테고리 기본키 select -->
 	<select id="getMaterialListCode" parameterType="ScrapUpcylingList">
 		SELECT
 			scrap_material_list_code

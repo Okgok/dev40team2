@@ -12,7 +12,7 @@ public class ScrapListInventory {
 	private String scrapInventoryLastDate;
 	private String scrapInventoryLastIncharge;
 	private String scrapImage;
-	private int scrapPrice;
+	private ScrapSale scrapSale;
 	public String getScrapInventoryCode() {
 		return scrapInventoryCode;
 	}
@@ -73,11 +73,11 @@ public class ScrapListInventory {
 	public void setScrapImage(String scrapImage) {
 		this.scrapImage = scrapImage;
 	}
-	public int getScrapPrice() {
-		return scrapPrice;
+	public ScrapSale getScrapSale() {
+		return scrapSale;
 	}
-	public void setScrapPrice(int scrapPrice) {
-		this.scrapPrice = scrapPrice;
+	public void setScrapSale(ScrapSale scrapSale) {
+		this.scrapSale = scrapSale;
 	}
 	@Override
 	public String toString() {
@@ -102,11 +102,12 @@ public class ScrapListInventory {
 		builder.append(scrapInventoryLastIncharge);
 		builder.append(", scrapImage=");
 		builder.append(scrapImage);
-		builder.append(", scrapPrice=");
-		builder.append(scrapPrice);
+		builder.append(", scrapSale=");
+		builder.append(scrapSale);
 		builder.append("]");
 		return builder.toString();
 	}
+	
 	
 	
 }

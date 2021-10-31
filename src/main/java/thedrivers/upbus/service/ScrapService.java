@@ -99,8 +99,23 @@ public class ScrapService {
 			}
 		return result;
 	}
+	//scrapWeight 업데이트
 	public int scrapWeightApprovalInsert(ScrapSale scrapSale) {
+		
 		return scrapMapper.scrapWeightApprovalInsert(scrapSale);
+	}
+	public List<ScrapUpcylingList> getScrapPrice(String scrapRequestCode) {
+	
+		return scrapMapper.getScrapPrice(scrapRequestCode);
+	}
+	//scrapSale scrapPrice 판매가 업데이트
+	public int scrapPriceUpdate(ScrapSale scrapSale) {
+		int result= 0;
+		result += scrapMapper.scrapPriceUpdate(scrapSale);
+		return result;
+	}
+	public int scrapInspectiondate(ScrapSale scrapSale) {
+		return  scrapMapper.scrapInspectiondateUpdate(scrapSale);
 	}
 
 	//user

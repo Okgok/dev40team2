@@ -71,9 +71,7 @@ public class GoodsService {
     }
     //개인위탁판매 재고 테이블 리스트
   	public List<GoodsInventory> getGoodsInventory(){
-  		System.out.println("MemberSellManage");
   		List<GoodsInventory> goodsInventoryList = goodsMapper.getGoodsInventory();
-  		log.info("개인위탁판매 재고 리스트 : {}", goodsInventoryList);
   		return goodsInventoryList;
   	}
 

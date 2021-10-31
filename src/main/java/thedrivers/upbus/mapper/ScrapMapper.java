@@ -31,6 +31,12 @@ public interface ScrapMapper {
 	public int scrapSaleDelete(String scrapRequestCode);
 	//7 scrapWeight 값 넣기
 	public int scrapWeightApprovalInsert(ScrapSale scrapSale);
+	//7.1 단위무게 단위가격 셀렉트해오기
+	public List<ScrapUpcylingList> getScrapPrice(String scrapRequestCode);
+	//7.2 판매가 업데이트
+	public int scrapPriceUpdate(ScrapSale scrapSale);
+	//7.2 scrapInspectiondate 업데이트
+	public int scrapInspectiondateUpdate(ScrapSale scrapSale);
 	//8 scrap_inventory 자동증가
 	public int scrapInventoryInsert(ScrapListInventory scrapInventoryCode);
 	//8.1 scrap_inventory_code 삭제
@@ -48,4 +54,5 @@ public interface ScrapMapper {
 	public List<ScrapUpcylingList> getScrapCategorySubList(String scrapCategory);
 	//3.2 서브 카테고리 기본키 가져오기
 	public ScrapUpcylingList getMaterialListCode(ScrapUpcylingList scrapName);
+	
  }
