@@ -100,20 +100,17 @@ public class ScrapController {
 	@ResponseBody
 	public Map<String,Object> scrapWeightApprovalAjax(@RequestParam(value="scrapRequestCode", required = false) String scrapRequestCode,
 														Model model, ScrapSale scrapSale){
-		System.out.println(scrapService.scrapInspectiondate(scrapSale)+"=========controller==");
 		Map<String,Object> map = new HashMap<String,Object>();
 		scrapService.scrapWeightApprovalInsert(scrapSale);
 		map.put("result", scrapService.getScrapPrice(scrapRequestCode));
-		map.put("result1", scrapService.scrapInspectiondate(scrapSale));
+		scrapService.scrapInspectiondate(scrapSale);
 		return map;
 	}
 
 	@PostMapping(value = "/scrapPriceUpdateAjex", produces="application/json")
 	@ResponseBody
 	public Map<String,Object> scrapPriceUpdateAjex(Model model, ScrapSale scrapSale){
-		
 		Map<String,Object> map = new HashMap<String,Object>();
-		
 		scrapService.scrapPriceUpdate(scrapSale);
 		return map;
 	}

@@ -87,61 +87,58 @@
 		<div class="ps__rail-x" style="left: 0px; bottom: -50px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 50px; height: 415px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 36px; height: 299px;"></div></div></div>
 		<!-- 무게 버튼 스크립트 -->
 		<script>
-		
-		
 		$(function(){
 			var weightApprovalAction = $('.weight-approval-action');
 			$(document).on('click', '.weight-approval-action', function(){
+				
 				var scrapSaleCode = $(this).val();
-					var scrapWeightInput = $(this).parents().children('.scrapWeightValue');
-					var scrapWeight = Number(scrapWeightInput.val());
-					var scrapRequestCode = $(this).attr('data-scrapRequestCode');
-					var scrapPriceInput = $(this).parents().parents().parents('tr').children('.scrapPrice');
-					var scrapInspectionDateInput = $(this).parents().parents().parents('tr').children('.scrapInspectionDate');
-					var scrapInspectionDate = scrapInspectionDateInput.val();
-					var scrapPrice = Number(scrapPriceInput.text());
-					var scrapPriceUnit = 0;
-					var scrapMaterialPriceWon =0;
-					var scrapPriceVal = 0;
+				var scrapWeightInput = $(this).parents().children('.scrapWeightValue');
+				var scrapWeight = Number(scrapWeightInput.val());
+				var scrapRequestCode = $(this).attr('data-scrapRequestCode');
+				var scrapPriceInput = $(this).parents().parents().parents('tr').children('.scrapPrice');
+				var scrapInspectionDateInput = $(this).parents().parents().parents('tr').children('.scrapInspectionDate');
+				var scrapInspectionDate = scrapInspectionDateInput.val();
+				var scrapPrice = Number(scrapPriceInput.text());
+				var scrapPriceUnit = 0;
+				var scrapMaterialPriceWon =0;
+				var scrapPriceVal = 0;
+				if (scrapWeight == 0) {
+						alert("무게를 입력해주세요.");
+						weightApprovalAction.focus();
+						return;
+					}
+				var request = $.ajax({
+					url: "/admin/scrap/scrapWeightApprovalAjax",
+					method: "POST",
+					data: {"scrapSaleCode": scrapSaleCode, "scrapWeight" : scrapWeight, "scrapRequestCode" : scrapRequestCode,
+							 "scrapPriceUnit" : scrapPriceUnit, "scrapMaterialPriceWon" : scrapMaterialPriceWon, 
+							 "scrapPrice" : scrapPrice, scrapInspectionDate : scrapInspectionDate},
+					dataType: "json"
+				});
+				
+				request.done(function( data ) {
+						var result = data.result;
+						scrapWeightUnit = scrapWeight/Number(result[0].scrapPriceUnit); 
+						scrapPriceVal = Number(scrapWeightUnit * Number(result[0].scrapMaterialPriceWon));
+						scrapPrice = scrapPriceVal;
 					
 					var request = $.ajax({
-						url: "/admin/scrap/scrapWeightApprovalAjax",
+						url: "/admin/scrap/scrapPriceUpdateAjex",
 						method: "POST",
-						data: {"scrapSaleCode": scrapSaleCode, "scrapWeight" : scrapWeight, "scrapRequestCode" : scrapRequestCode, "scrapPriceUnit" : scrapPriceUnit, "scrapMaterialPriceWon" : scrapMaterialPriceWon, "scrapPrice" : scrapPrice, scrapInspectionDate : scrapInspectionDate},
+						data: {"scrapSaleCode": scrapSaleCode,"scrapPrice" : scrapPrice},
 						dataType: "json"
-					});
-					
+					});		
 					request.done(function( data ) {
-							var result = data.result;
-							scrapWeightUnit = scrapWeight/Number(result[0].scrapPriceUnit); 
-							scrapPriceVal = Number(scrapWeightUnit * Number(result[0].scrapMaterialPriceWon));
-							scrapPrice = scrapPriceVal;
+						var result = data.result;
+						scrapPriceInput.text(scrapPrice);
 						
-						var request = $.ajax({
-							url: "/admin/scrap/scrapPriceUpdateAjex",
-							method: "POST",
-							data: {"scrapSaleCode": scrapSaleCode,"scrapPrice" : scrapPrice},
-							dataType: "json"
-						});		
-						request.done(function( data ) {
-							var result = data.result;
-							scrapPriceInput.text(scrapPrice);
-							
-					});
-					request.fail(function( jqXHR, textStatus ) {
-						alert( "Request failed: " + textStatus );
-			
-					
-					});
+				});
+				request.fail(function( jqXHR, textStatus ) {
+					alert( "Request failed: " + textStatus );
+				});
+				});
 			});
-			
-			
-			
 		});
-		});
-		
-		
-								
 		
 		/* 승인버튼 스크립트 */
 		
