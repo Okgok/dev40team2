@@ -52,29 +52,29 @@
 						</thead>
 						<tbody style="font-size: 20px;">
 							<tr th:each="saleList: ${saleList}">
-								<td th:text="${saleList.scrapSaleCode}">재료매입코드</td>
-								<td th:text="${saleList.scrapRequestCode}">재료판매신청코드</td>
+								<td class="scrapStatusAmount"  th:text="${saleList.scrapSaleCode}">재료매입코드</td>
+								<td class="scrapRequestCode" th:text="${saleList.scrapRequestCode}"></td>
 								<td th:text="${saleList.scrapMileageUserListCode}">마일리지내역코드</td>
 								<td th:text="${saleList.scrapReceivingDate}">입고일자</td>
-								<td th:text="${saleList.scrapInspectionDate}">검수일자</td> <!-- 버튼 누르면 버튼 사라지고 검수 날짜 나왔으면 좋겠다 -->
+								<td class="scrapInspectionDate" th:text="${saleList.scrapInspectionDate}">검수일자</td>
 								<td>
-								   <!--<input type="text" style= "margin-bottom: 20px;" class="form-control" placeholder="재료 무게" name="scrapWeight"/>-->
 								<div class="col-sm-12">
 								    <div class="input-group">
-								      <input type="text" class="form-control" id="scrapWeight" th:value="${saleList.scrapWeight}"placeholder="Search for...">
+								      <input type="text" class="form-control scrapWeightValue" name="scrapWeight" th:value="${saleList.scrapWeight}"placeholder="">
 								      <span class="input-group-btn">
-								        <button class="btn btn-default" id="weight-approval-action" th:value="#{saleList.scrapWeight}" type="button">입력</button>
+								      	<input type="hidden" th:value="${saleList.scrapWeight}">
+								        <button class="btn btn-default weight-approval-action"  name="scrapSaleCode" th:data-scrapRequestCode="${saleList.scrapRequestCode}" th:value="${saleList.scrapSaleCode}" type="button">입력</button>
 								      </span>
 								    </div>
 								  </div>
 								</td>
-								<td th:text="${saleList.scrapPrice}"></td>
+								<td class="scrapPrice" th:text="${saleList.scrapPrice}"></td>
 								<td>
 									<span class="scrapStatusAmountText" th:if="${saleList.scrapStatusAmount eq 1}">Y</span>
 									<span class="scrapStatusAmountText" th:unless="${saleList.scrapStatusAmount eq 1}">N</span>
 								</td>
 								<td>
-									<input type="hidden" class="scrapStatusAmount" th:value="${saleList.scrapStatusAmount}">
+									<input type="hidden"  th:value="${saleList.scrapStatusAmount}">
 								 	<button th:if="${saleList.scrapStatusAmount eq 1}" th:value="${saleList.scrapSaleCode}" class="btn btn-danger sale-approval-action" type="button">취소</button>
 									<button th:unless="${saleList.scrapStatusAmount eq 1}" th:value="${saleList.scrapSaleCode}" class="btn btn-primary sale-approval-action" type="button">승인</button>
 								</td>
@@ -87,34 +87,64 @@
 		<div class="ps__rail-x" style="left: 0px; bottom: -50px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 50px; height: 415px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 36px; height: 299px;"></div></div></div>
 		<!-- 무게 버튼 스크립트 -->
 		<script>
+		
+		
 		$(function(){
-			$('#weight-approval-action').click(function(){
-				var btn = $(this);
-				var scrapWeight =  $(this).parents('tr').find('#scrapWeight');
-				
-				
+			var weightApprovalAction = $('.weight-approval-action');
+			$(document).on('click', '.weight-approval-action', function(){
 				var scrapSaleCode = $(this).val();
-				var request = $.ajax({
-					url: "/admin/scrap/scrapWeightApprovalAjax",
-					method: "GET",
-					data: {scrapSaleCode: scrapSaleCode, scrapWeight : scrapWeight},
-					dataType: "json"
-				});
-				
+					var scrapWeightInput = $(this).parents().children('.scrapWeightValue');
+					var scrapWeight = Number(scrapWeightInput.val());
+					var scrapRequestCode = $(this).attr('data-scrapRequestCode');
+					var scrapPriceInput = $(this).parents().parents().parents('tr').children('.scrapPrice');
+					var scrapInspectionDateInput = $(this).parents().parents().parents('tr').children('.scrapInspectionDate');
+					var scrapInspectionDate = scrapInspectionDateInput.val();
+					var scrapPrice = Number(scrapPriceInput.text());
+					var scrapPriceUnit = 0;
+					var scrapMaterialPriceWon =0;
+					var scrapPriceVal = 0;
+					
+					var request = $.ajax({
+						url: "/admin/scrap/scrapWeightApprovalAjax",
+						method: "POST",
+						data: {"scrapSaleCode": scrapSaleCode, "scrapWeight" : scrapWeight, "scrapRequestCode" : scrapRequestCode, "scrapPriceUnit" : scrapPriceUnit, "scrapMaterialPriceWon" : scrapMaterialPriceWon, "scrapPrice" : scrapPrice, scrapInspectionDate : scrapInspectionDate},
+						dataType: "json"
+					});
+					
 					request.done(function( data ) {
-						var result = data.result;
-						scrapWeight.val();
-					 
+							var result = data.result;
+							scrapWeightUnit = scrapWeight/Number(result[0].scrapPriceUnit); 
+							scrapPriceVal = Number(scrapWeightUnit * Number(result[0].scrapMaterialPriceWon));
+							scrapPrice = scrapPriceVal;
+						
+						var request = $.ajax({
+							url: "/admin/scrap/scrapPriceUpdateAjex",
+							method: "POST",
+							data: {"scrapSaleCode": scrapSaleCode,"scrapPrice" : scrapPrice},
+							dataType: "json"
+						});		
+						request.done(function( data ) {
+							var result = data.result;
+							scrapPriceInput.text(scrapPrice);
+							
+					});
 					request.fail(function( jqXHR, textStatus ) {
 						alert( "Request failed: " + textStatus );
+			
+					
 					});
-				});
 			});
+			
+			
+			
+		});
+		});
+		
 		
 								
-		</script>
-		<!-- 승인버튼 스크립트 -->
-		<script>
+		
+		/* 승인버튼 스크립트 */
+		
 			$(function(){
 				$('.sale-approval-action').click(function(){
 				var btn = $(this);
@@ -180,4 +210,3 @@
 </th:block>
 
 </html>
-

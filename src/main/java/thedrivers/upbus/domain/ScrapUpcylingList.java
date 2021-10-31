@@ -4,7 +4,7 @@ public class ScrapUpcylingList {
 	private String scrapMaterialListCode;
 	private String scrapCategoryNumber;
 	private String scrapName;
-	private String scrapPriceUnit;
+	private int scrapPriceUnit;
 	private int scrapMaterialPriceWon;
 	private int scrapWeightPerPiece;
 	private String scrapUpcylingImage;
@@ -27,10 +27,10 @@ public class ScrapUpcylingList {
 	public void setScrapName(String scrapName) {
 		this.scrapName = scrapName;
 	}
-	public String getScrapPriceUnit() {
+	public int getScrapPriceUnit() {
 		return scrapPriceUnit;
 	}
-	public void setScrapPriceUnit(String scrapPriceUnit) {
+	public void setScrapPriceUnit(int scrapPriceUnit) {
 		this.scrapPriceUnit = scrapPriceUnit;
 	}
 	public int getScrapMaterialPriceWon() {
@@ -79,6 +79,5 @@ public class ScrapUpcylingList {
 		builder.append("]");
 		return builder.toString();
 	}
-
 	
 }
