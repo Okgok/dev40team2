@@ -1,0 +1,143 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="@{layout/user}">
+	  	  
+<!-- 커스텀 타이틀 지정 -->
+<th:block layout:fragment="customTitle">
+	<title th:text="${title}"></title>
+</th:block>
+	  
+<!-- contents layout:fragment 정의 -->
+<th:block layout:fragment="userCustomContents">
+
+	<style>
+		/********************* 웹 페이지 Header 부분 CSS START **********************/
+		#header-white-space-top{
+			height: 20px;	
+		}
+		
+		#header-white-space-bottom{
+			margin-top: 60px;
+			height: 20px;
+		}
+	
+		#header-title-text{
+			float: left;	
+			font-weight: bolder;	
+		}
+		#header-step-wrap{
+			margin-top: 20px;
+		}
+	
+		.circle{
+			display:inline-block;
+			list-style:none;
+			float:right;
+			background-color:#4BAF4B;
+			width:30px;
+			height:30px;
+			border-radius:75px;
+			text-align:center;
+			margin:0 auto;
+			font-size:12px;
+			vertical-align:middle;
+			line-height:30px;
+		}
+		
+		a.circle{
+			color: #ffffff;
+			font-size: 15px;
+  			font-weight: 700;
+		}
+		
+		.line{
+			display: inline-block;
+			float: right;
+			width: 50px;
+			height: 5px;
+			background-color: #4BAF4B;
+			vertical-align: middle;
+			margin-top: 12px;
+		}
+		
+		/********************* 웹 페이지 Header 부분 CSS END ************************/
+
+
+		/********* 웹 페이지 전체의 체크박스를 이미지 체크박스로 바꾸어주는 CSS START ************/
+		
+		input[type=checkbox] {
+   			display:none;
+		}
+		
+		input[type=checkbox] + label { 
+		    cursor: pointer; 
+		    padding-left: 23px; 
+		    background-repeat: no-repeat;
+		    background-image: url('/resources/static/img/common/checker-off.svg');
+		}
+		
+		input[type=checkbox]:checked + label {
+		    background-image: url('/resources/static/img/common/checker-on.svg');
+		}
+		
+		input[type=checkbox]:disabled + label {
+		    background-image: url('/resources/static/img/common/checker-disabled.svg');
+		}
+		
+		/********** 웹 페이지 전체의 체크박스를 이미지 체크박스로 바꾸어주는 CSS END *************/
+		
+		
+		/******************** 웹 페이지 장바구니 콘텐츠 부분 CSS START ********************/
+		
+		#ShoppingBasket-Content-Wrap{
+			background-color: #DCFFDC;
+			height:300px;	
+		}
+		
+		#select-group{
+			background-color: #ffffff;
+			height: 20px;
+			padding-left: 10px;
+	    	padding-right: 10px;
+	    	padding-top: 10px;
+	    	height: 60px;
+	    	background-clip: content-box;
+		}
+		
+		#allcheck-text{
+			padding-left: 10px;
+		}
+		
+		/*******************  웹 페이지 장바구니 콘텐츠 부분 CSS END ********************/
+	</style>
+	
+	
+	<div id="header-white-space-top"></div>	
+	<h2 id="header-title-text" > 장바구니	</h2>
+	<div id="header-step-wrap">
+		<nav>
+			<ul>
+				<li> <a href="#" class="circle"> 3 </a> </li>
+				<li class="line"> </li>
+				<li> <a href="#" class="circle"> 2 </a> </li>
+				<li class="line"> </li>		
+				<li> <a href="#" class="circle"> ✔ </a> </li>		
+			</ul>	
+		</nav>
+	</div>
+	<div id="header-white-space-bottom"></div>
+		
+	<div id="ShoppingBasket-Content-Wrap">
+		<div class="select-group-wrap">
+			<div id="select-group">
+				  <input type="checkbox" name="checker" id="checker1"><label for="checker1">전체선택</label>
+				  <span id="allcheck-text"> (2/1) </span>
+			</div>
+		</div>
+		
+	
+	</div>
+
+	</th:block>
+</html>
